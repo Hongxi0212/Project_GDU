@@ -1,0 +1,8 @@
+-v0.0.1
+
+implement basic movement including move, jump, sprint, stamina
+implement camera control
+
+TODO:
+1. climbing and explosive jump (ep jump after weapon system
+2. inventory
