@@ -15,6 +15,7 @@ namespace GDUGame {
       private Vector3 velocity;
       private Vector3 moveDirection;
       public LayerMask GroundMask;
+      public LayerMask WallMask;
       private PlayerView pv = new();
 
       [SerializeField]
@@ -27,9 +28,27 @@ namespace GDUGame {
       [SerializeField]
       private float moveSpeed;
       [SerializeField]
+      [Tooltip("influence falling speed (multiplied with gravity")]
+      private float mass;
+      [SerializeField]
       private float jumpHeight;
       [SerializeField]
       private float dashDistance;
+
+      [Header("Climb")]
+      [SerializeField]
+      [Tooltip("The distance of detecting whether has wall in front")]
+      private float climbDetectionDis;
+      [SerializeField]
+      [Tooltip("The player can climb only when the Angle between the view and the wall normal is less than this value")]
+      private float climbableViewAngle;
+      [SerializeField]
+      private float climbDuration;
+      [SerializeField]
+      private float climbDuration_Max;
+      [SerializeField]
+      private float climbSpeed;
+
 
       [Header("Sprint")]
       [SerializeField]
@@ -41,9 +60,14 @@ namespace GDUGame {
       [Header("Stamina")]
       [SerializeField]
       private float stamina;
-      private float stamina_Max = 5f;
-      [Tooltip("The change rate of stamina (per second")]
-      private float stamina_Change = 1f;
+      [SerializeField]
+      private float stamina_Max;
+      [SerializeField]
+      [Tooltip("The cost rate of stamina (per second")]
+      private float stamina_Cost;
+      [SerializeField]
+      [Tooltip("The recover rate of stamina (per second")]
+      private float stamina_Recover;
 
       [Header("Status Check")]
       [SerializeField]
@@ -52,6 +76,9 @@ namespace GDUGame {
       [SerializeField]
       [Tooltip("whether Player is on ground")]
       private bool isOnGround;
+      [SerializeField]
+      [Tooltip("whether Player is climbing on the wall")]
+      private bool isClimbing;
       [SerializeField]
       [Tooltip("whether Player influenced by gravity")]
       private bool hasGravity;
@@ -72,14 +99,18 @@ namespace GDUGame {
       }
 
       private void Update() {
-         isOnGround = checkOnGround();
-
          if(Input.GetButtonDown("Jump")) {
             jump();
          }
 
+         isOnGround = checkOnGround();
+
          if(Input.GetKeyDown(KeyCode.LeftControl)) {
             dash();
+         }
+
+         if(Input.GetKey(KeyCode.W) && checkFrontWallandClimbable()) {
+            climb();
          }
 
          underGravity();
@@ -120,14 +151,19 @@ namespace GDUGame {
          if(Input.GetKey(KeyCode.LeftShift) && stamina > 0) {
             moveDirection *= sprint_Factor;
 
-            stamina -= stamina_Change * Time.deltaTime;
+            stamina -= stamina_Cost * Time.deltaTime;
          }
          else if(!Input.GetKey(KeyCode.LeftShift) && stamina < stamina_Max) {
-            stamina += stamina_Change * Time.deltaTime;
+            stamina += stamina_Recover * Time.deltaTime;
          }
 
          if(stamina > stamina_Max) {
             stamina = stamina_Max;
+         }
+
+         if(isClimbing) {
+            moveDirection.x = 0f;
+            moveDirection.z *= 0.5f;
          }
 
          cc.Move(moveDirection * moveSpeed);
@@ -138,11 +174,16 @@ namespace GDUGame {
       /// </summary>
       private void underGravity() {
          if(hasGravity && !isOnGround) {
-            velocity.y += gravity * Time.deltaTime;
-            cc.Move(0.5f * velocity * Time.deltaTime);
+            velocity.y += mass * 0.5f * gravity * Time.deltaTime;
+            cc.Move(velocity * Time.deltaTime);
          }
          else if(velocity.y < 0 && isOnGround) {
-            velocity.y = -1f;
+            if(!isClimbing) {
+               velocity.y = 0f;
+            }
+
+            isClimbing = false;
+            climbDuration = climbDuration_Max;
          }
       }
 
@@ -152,8 +193,8 @@ namespace GDUGame {
       /// </summary>
       private void jump() {
          if(isOnGround) {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-            cc.Move(0.5f * velocity * Time.deltaTime);
+            velocity.y = jumpHeight;
+            cc.Move(velocity * Time.deltaTime);
          }
       }
 
@@ -164,12 +205,37 @@ namespace GDUGame {
          cc.Move(moveDirection * dashDistance);
       }
 
+      private void climb() {
+         if(climbDuration > 0) {
+            isOnGround = false;
+            isClimbing = true;
+            climbDuration -= Time.deltaTime;
+
+            velocity.y = climbSpeed / mass;
+            cc.Move(velocity * Time.deltaTime);
+         }
+         else {
+            isClimbing = false;
+         }
+      }
+      
+
       /// <summary>
       /// check whether Player is in contact with ground Mask by Physics.CheckSphere
       /// </summary>
       /// <returns></returns>
       private bool checkOnGround() {
          return Physics.CheckSphere(feet.transform.position, groundCheckDistance, GroundMask);
+      }
+
+      private bool checkFrontWallandClimbable() {
+         RaycastHit hit;
+
+         if(Physics.Raycast(feet.transform.position, transform.forward, out hit, climbDetectionDis, WallMask)) {
+            return Vector3.Angle(head.transform.forward, -hit.normal) <= climbableViewAngle/2f;
+         }
+
+         return false;
       }
 
       /// <summary>
