@@ -1,0 +1,63 @@
+4 classes of weaponry:
+ 1. small
+ 2. medium
+ 3. large
+ 4. explosive
+
+Each weapon has a class (except the computer) and at any time, two weapons of each weapon class can be carried.
+
+Weapon Ideas:
+1. rocket launcher - but cool                                                                 - explosive
+2. grenade launcher minigun                                                                   - explosive
+3. Dolphin gun - but it fires laser death beam                                                - large
+4. double barrel Nailgun                                                                      - medium
+5. belt fed shotgun                                                                           - large
+6. banana pistol - converts to sniper?                                                        - small
+7. homing missle pod                                                                          - explosive
+8. heat seeking melon                                                                         - explosive
+9. glock 17 but fires way too fast                                                            - small
+10. blunderbuss                                                                               - small
+11. akimbo drum fed machine guns                                                              - large
+12. flamethrower                                                                              - large
+13. melta but called something else because of copyright                                      - medium
+14. spear slammer                                                                             - large
+15. trumpet                                                                                   - small
+16. anti-tank rifle                                                                           - medium
+17. black hole gun                                                                            - medium
+18. golf ball launcher                                                                        - explosive
+19. plasma gun                                                                                - medium
+20. machine gun                                                                               - large
+21. pistol                                                                                    - small
+22. grenade launcher                                                                          - explosive
+23. rifle                                                                                     - medium
+24. buzzsaw launcher                                                                          - medium
+25. shoulder mounted ICBM                                                                     - large
+26. pickle jar - every pickle is a stick of dynamite                                          - explosive
+27. plasma thrower                                                                            - large
+28. Dual Laser pistols                                                                        - small
+29. single fire rifle that gives health to the player over time when hitting an enemy         - medium
+30. handheld tank
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+why not ues Excel??
