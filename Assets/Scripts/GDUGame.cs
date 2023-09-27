@@ -1,9 +1,9 @@
-using QFramework;
+using HXFramework;
 
 namespace GDUGame {
-   public class GDUGame: ContainerSetter<GDUGame> {
+   public class GDUGame: Factory<GDUGame> {
       protected override void Init() {
-         this.RegisterSystem<IInputSystem>(new InputSystem());
+
       }
    }
 }

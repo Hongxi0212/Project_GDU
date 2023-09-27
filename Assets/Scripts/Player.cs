@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace GDUGame {
    public class Player: MonoBehaviour {
@@ -69,6 +69,10 @@ namespace GDUGame {
       [Tooltip("The recover rate of stamina (per second")]
       private float stamina_Recover;
 
+      [Header("PickUp")]
+      [SerializeField]
+      private float pickUpRange;
+
       [Header("Status Check")]
       [SerializeField]
       [Tooltip("whether invert Y axis of mouse")]
@@ -111,6 +115,10 @@ namespace GDUGame {
 
          if(Input.GetKey(KeyCode.W) && checkFrontWallandClimbable()) {
             climb();
+         }
+
+         if(Input.GetKeyDown(KeyCode.F)) {
+            pickUp();
          }
 
          underGravity();
@@ -219,6 +227,31 @@ namespace GDUGame {
          }
       }
       
+      private void pickUp() {
+         GameObject item=new GameObject();
+
+         if(checkItemPickable(ref item)) {
+            item.transform.SetParent(transform);
+            item.transform.localPosition = Vector3.zero;
+         }
+      }
+
+      private bool checkItemPickable(ref GameObject item) {
+         var rayOrigin = head.transform.position;
+         var rayDirection = head.transform.forward;
+
+         RaycastHit hit;
+         if(Physics.Raycast(rayOrigin, rayDirection, out hit, pickUpRange)) {
+            if(hit.collider == null || !hit.collider.CompareTag("Item")) {
+               return false;
+            }
+
+            item = hit.collider.gameObject;
+            return true;
+         }
+
+         return false;
+      }
 
       /// <summary>
       /// check whether Player is in contact with ground Mask by Physics.CheckSphere
@@ -230,7 +263,6 @@ namespace GDUGame {
 
       private bool checkFrontWallandClimbable() {
          RaycastHit hit;
-
          if(Physics.Raycast(feet.transform.position, transform.forward, out hit, climbDetectionDis, WallMask)) {
             return Vector3.Angle(head.transform.forward, -hit.normal) <= climbableViewAngle/2f;
          }
