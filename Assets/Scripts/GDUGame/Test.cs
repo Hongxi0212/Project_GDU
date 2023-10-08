@@ -1,6 +1,10 @@
 using GDUGame;
 using UnityEngine;
 
+/// <summary>
+/// Used for Test
+/// Allow any Modify
+/// </summary>
 public class Test: GDUController {
 
    private void Start() {

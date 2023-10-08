@@ -2,51 +2,64 @@
 using System.Collections.Generic;
 
 namespace GDUGame {
-
+   /// <summary>
+   /// This is a system used to manage GunData when playing Game
+   /// Notice: the "GunData" Gundata specifically refers to
+   ///         the dynamic game data in the level
+   ///         not static, game configuration data outside the level
+   /// </summary>
    public class GunSystem: AbstractSystem, IGunSystem {
-      private GunData mCurrentGun;
+      private GunData mCurrentGunData;
 
       public GunData CurrentGunData {
          get {
-            return mCurrentGun;
+            return mCurrentGunData;
          }
          set {
-            mCurrentGun = value;
+            mCurrentGunData = value;
          }
       }
 
-      private List<GunData> mGunList;
+      private List<GunData> mAllGunData;
 
       public List<GunData> AllGunsData {
          get {
-            return mGunList;
+            return mAllGunData;
          }
          set {
-            mGunList = value;
+            mAllGunData = value;
          }
       }
 
+      /// <summary>
+      /// Change current GunData to specific Gun
+      /// parameter slotNum refers to the index of the four guns
+      /// owned by the player in the equipment slots
+      /// 
+      /// NOTICE: The Parameter SlotNum Should be in Range of 0-3
+      /// </summary>
+      /// <param name="slotNum"></param>
       public void SwitchGun(int slotNum) {
-         if(mGunList.Count > 0) {
-            mCurrentGun = mGunList[slotNum];
+         if(mAllGunData.Count > 0) {
+            mCurrentGunData = mAllGunData[slotNum];
          }
       }
 
       protected override void OnInit() {
          //To be changed when start from level
-         //Impletment by Model System, loadPathString and fileName should be read by json file
+         //Implement by Model System, loadPathString and fileName should be read by json file
          AllGunsData = new List<GunData> {
             new GunData() {
                BulletCount = new BindableProperty<int>() {
                   Value = 9999
                },
                SpareRoundsCount = new BindableProperty<int>() {
-                  Value = 210
+                  Value = 9999
                }
             }
          };
 
-         if(mGunList != null) {
+         if(mAllGunData != null) {
             SwitchGun(0);
          }
       }

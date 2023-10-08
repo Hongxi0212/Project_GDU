@@ -7,6 +7,7 @@ TODO:
 1. climbing and explosive jump (ep jump after weapon system
 2. inventory
 
+
 -v0.0.2
 
 implement climbing
@@ -16,3 +17,15 @@ TODO:
 2. inventory
 3. weapon system
 4. keyboarding
+
+
+-v0.0.4
+
+implement GunSystem and Fire(initially)
+implement InputSystem
+
+TODO:
+1. TimeSystem
+2. Fully Finish GunSystem and Fire with TimeSystem
+3. GameUI with GunSystem and Player State
+4. Customizable Input

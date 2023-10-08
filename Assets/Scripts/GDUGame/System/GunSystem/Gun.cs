@@ -1,7 +1,10 @@
 using QPFramework;
+using System.Numerics;
 
 namespace GDUGame {
-
+   /// <summary>
+   /// Represent Current State of Gun
+   /// </summary>
    public enum GunState {
       Idle = 0,
       Shooting = 1,
@@ -10,6 +13,10 @@ namespace GDUGame {
       Cooling = 20
    }
 
+   /// <summary>
+   /// Implement logic of Gameplay about Gun in Scene 
+   /// </summary>
+   /// <seealso cref="GDUGame.GDUController" />
    public class Gun: GDUController {
       private Bullet bullet;
 
@@ -30,6 +37,9 @@ namespace GDUGame {
          };
       }
 
+      /// <summary>
+      /// Gun Shoot, implement by Inst Bullet Instance GameObject
+      /// </summary>
       public void Shoot() {
          if(gunData.BulletCount.Value > 0 && State.Value == GunState.Idle) {
             //State Changing should be instead of using TimeSystem with Fire Frequency
@@ -44,13 +54,16 @@ namespace GDUGame {
          }
       }
 
+      /// <summary>
+      /// Gun Reload, Checking bullet count in gun and spare rounds count
+      /// </summary>
       public void Reload() {
          if(gunData.BulletCount.Value < capacity && State.Value == GunState.Idle) {
             if(gunData.SpareRoundsCount.Value > 0) {
                var needBulletCount = capacity - gunData.BulletCount.Value;
 
                if(needBulletCount > 0) {
-                  //Using TimeSystem to impletment reload
+                  //Using TimeSystem to implement reload
 
                   //Remember to change state in ReloadCommand
                }
