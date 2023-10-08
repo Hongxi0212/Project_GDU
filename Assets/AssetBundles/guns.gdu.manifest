@@ -1,0 +1,42 @@
+ManifestFileVersion: 0
+CRC: 1280015895
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 32800ccc82145efe4c5071629b180dbc
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 7b5b827491b66f0fddd152f13b805e0f
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 32800ccc82145efe4c5071629b180dbc
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 0532f35650bb07e48931d49a3df8a09e, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: ee7d9f9ea545d51469412476faad6b52, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 136
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Prefabs/Guns/Assault1.prefab
+Dependencies: []

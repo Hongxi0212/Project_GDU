@@ -1,0 +1,21 @@
+Load Directly:
+
+         var asset = AssetBundle.LoadFromFile("Assets/AssetBundles/guns.gdu");
+         var obj = asset.LoadAsset("Assault1");//通过资源名加载单个资源
+         Debug.Log(obj.name);
+
+Load Asynchronously:
+
+         string path = "Assets/AssetBundles/guns.gdu";//AB包的位置
+                                               //异步加载
+         AssetBundleCreateRequest request = AssetBundle.LoadFromMemoryAsync(File.ReadAllBytes(path));
+         yield return request;
+         AssetBundle ab = request.assetBundle;
+
+         //使用里面的资源
+         var game = ab.LoadAllAssets<GameObject>();
+
+         Debug.Log(game[0].name);
+
+
+Notice: Ensure the path of assetbundle starts from Root Directory "Asset"
