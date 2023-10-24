@@ -9,6 +9,17 @@ namespace GDUGame {
    ///         not static, game configuration data outside the level
    /// </summary>
    public class GunSystem: AbstractSystem, IGunSystem {
+      private Gun mCurrentGun;
+
+      public Gun CurrentGun {
+         get {
+            return mCurrentGun;
+         }
+         set {
+            mCurrentGun = value;
+         }
+      }
+
       private GunData mCurrentGunData;
 
       public GunData CurrentGunData {
@@ -20,15 +31,19 @@ namespace GDUGame {
          }
       }
 
-      private List<GunData> mAllGunData;
+      private List<Gun> mAllGuns;
 
-      public List<GunData> AllGunsData {
+      public List<Gun> AllGuns {
          get {
-            return mAllGunData;
+            return mAllGuns;
          }
          set {
-            mAllGunData = value;
+            mAllGuns = value;
          }
+      }
+
+      public void RegisterGun(Gun gun) {
+         AllGuns.Add(gun);
       }
 
       /// <summary>
@@ -40,26 +55,17 @@ namespace GDUGame {
       /// </summary>
       /// <param name="slotNum"></param>
       public void SwitchGun(int slotNum) {
-         if(mAllGunData.Count > 0) {
-            mCurrentGunData = mAllGunData[slotNum];
+         if(AllGuns.Count > 0) {
+            CurrentGun = AllGuns[slotNum];
+            CurrentGunData = CurrentGun.GunData;
          }
       }
 
       protected override void OnInit() {
          //To be changed when start from level
          //Implement by Model System, loadPathString and fileName should be read by json file
-         AllGunsData = new List<GunData> {
-            new GunData() {
-               BulletCount = new BindableProperty<int>() {
-                  Value = 9999
-               },
-               SpareRoundsCount = new BindableProperty<int>() {
-                  Value = 9999
-               }
-            }
-         };
 
-         if(mAllGunData != null) {
+         if(mAllGuns != null) {
             SwitchGun(0);
          }
       }

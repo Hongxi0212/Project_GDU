@@ -347,7 +347,6 @@ namespace GDUGame {
       /// Player use gun to fire
       /// </summary>
       private void fire() {
-         gun.Shoot();
          this.SendCommand(FireCommand.Singleton);
       }
    }

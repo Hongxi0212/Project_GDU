@@ -13,7 +13,15 @@ namespace GDUGame {
       protected override void OnExecute() {
          var gunSystem = this.GetSystem<IGunSystem>();
 
-         gunSystem.CurrentGunData.BulletCount.Value--;
+         gunSystem.CurrentGun.Shoot();
+         gunSystem.CurrentGun.GunData.BulletCount.Value--;
+
+         var gunInfo = this.GetModel<IGunModel>().GetGunInfoByName(gunSystem.CurrentGun.Name.Value);
+
+         this.GetSystem<ITimeSystem>().AddDelayTask(1f / gunInfo.Frequency,
+            () => {
+               gunSystem.CurrentGun.CoolDown();
+            });
       }
    }
 }
