@@ -1,5 +1,7 @@
 ﻿using QPFramework;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace GDUGame {
    /// <summary>
@@ -9,6 +11,17 @@ namespace GDUGame {
    ///         not static, game configuration data outside the level
    /// </summary>
    public class GunSystem: AbstractSystem, IGunSystem {
+      private Gun mCurrentGun;
+
+      public Gun CurrentGun {
+         get {
+            return mCurrentGun;
+         }
+         set {
+            mCurrentGun = value;
+         }
+      }
+
       private GunData mCurrentGunData;
 
       public GunData CurrentGunData {
@@ -20,15 +33,28 @@ namespace GDUGame {
          }
       }
 
-      private List<GunData> mAllGunData;
+      private Dictionary<Gun, GunData> mAllGunwithDatas = new Dictionary<Gun, GunData>();
 
-      public List<GunData> AllGunsData {
+      public Dictionary<Gun, GunData> AllGunwithDatas {
          get {
-            return mAllGunData;
+            return mAllGunwithDatas;
          }
-         set {
-            mAllGunData = value;
-         }
+      }
+
+      public void OptInGun(Gun gun) {
+         var info=this.GetModel<IGunModel>().GetGunInfoByName(gun.Name.Value);
+
+         AllGunwithDatas.Add(gun, new GunData() {
+            BulletCount=new BindableProperty<int>() {
+               //Value=info.BulletMaxCount
+               Value=99999
+            },
+            SpareRoundsCount=new BindableProperty<int>() {
+               Value=9999
+            }
+         });
+
+         SwitchGun(0);
       }
 
       /// <summary>
@@ -40,26 +66,17 @@ namespace GDUGame {
       /// </summary>
       /// <param name="slotNum"></param>
       public void SwitchGun(int slotNum) {
-         if(mAllGunData.Count > 0) {
-            mCurrentGunData = mAllGunData[slotNum];
+         if(AllGunwithDatas.Count > 0) {
+            CurrentGun = AllGunwithDatas.ElementAt(0).Key;
+            CurrentGunData = AllGunwithDatas.ElementAt(0).Value;
          }
       }
 
       protected override void OnInit() {
          //To be changed when start from level
          //Implement by Model System, loadPathString and fileName should be read by json file
-         AllGunsData = new List<GunData> {
-            new GunData() {
-               BulletCount = new BindableProperty<int>() {
-                  Value = 9999
-               },
-               SpareRoundsCount = new BindableProperty<int>() {
-                  Value = 9999
-               }
-            }
-         };
 
-         if(mAllGunData != null) {
+         if(AllGunwithDatas != null) {
             SwitchGun(0);
          }
       }

@@ -8,6 +8,9 @@ namespace GDUGame {
       /// </summary>
       protected override void Init() {
          this.SetSystem<IGunSystem>(new GunSystem());
+         this.SetSystem<ITimeSystem>(new TimeSystem());
+
+         this.SetModel<IGunModel>(new GunModel());
       }
    }
 }

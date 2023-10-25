@@ -1,5 +1,5 @@
-using QPFramework;
-using System.Numerics;
+﻿using QPFramework;
+using UnityEngine;
 
 namespace GDUGame {
    /// <summary>
@@ -20,21 +20,30 @@ namespace GDUGame {
    public class Gun: GDUController {
       private Bullet bullet;
 
-      private GunData gunData;
-
       private int capacity;
 
-      public string Name;
+      private GunData gunData;
+
+      public BindableProperty<string> Name;
 
       public BindableProperty<GunState> State;
 
       private void Awake() {
-         bullet = transform.Find("Bullet").GetComponent<Bullet>();
-         gunData = this.GetSystem<IGunSystem>().CurrentGunData;
+         Name = new BindableProperty<string>() {
+            Value = name.Split('(')[0]
+         };
 
          State = new BindableProperty<GunState>() {
             Value = GunState.Idle,
          };
+
+         bullet = transform.Find("Bullet").GetComponent<Bullet>();
+
+         var gunSystem = this.GetSystem<IGunSystem>();
+
+         gunSystem.OptInGun(this);
+         gunData = gunSystem.CurrentGunData;
+
       }
 
       /// <summary>
@@ -49,8 +58,6 @@ namespace GDUGame {
 
             b.transform.localScale = bullet.transform.localScale;
             b.Trigger(b.transform);
-
-            State.Value = GunState.Idle;
          }
       }
 
@@ -69,6 +76,10 @@ namespace GDUGame {
                }
             }
          }
+      }
+
+      public void CoolDown() {
+         State.Value = GunState.Idle;
       }
    }
 }
