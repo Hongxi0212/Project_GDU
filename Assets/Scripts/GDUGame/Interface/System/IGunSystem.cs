@@ -8,9 +8,9 @@ namespace GDUGame {
 
       GunData CurrentGunData { get; set; }
 
-      List<Gun> AllGuns { get; }
+      Dictionary<Gun, GunData> AllGunwithDatas { get; }
 
-      void RegisterGun(Gun gun);
+      void OptInGun(Gun gun);
 
       void SwitchGun(int slotNum);
    }

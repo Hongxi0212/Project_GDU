@@ -1,5 +1,7 @@
 ﻿using QPFramework;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace GDUGame {
    /// <summary>
@@ -31,19 +33,28 @@ namespace GDUGame {
          }
       }
 
-      private List<Gun> mAllGuns;
+      private Dictionary<Gun, GunData> mAllGunwithDatas = new Dictionary<Gun, GunData>();
 
-      public List<Gun> AllGuns {
+      public Dictionary<Gun, GunData> AllGunwithDatas {
          get {
-            return mAllGuns;
-         }
-         set {
-            mAllGuns = value;
+            return mAllGunwithDatas;
          }
       }
 
-      public void RegisterGun(Gun gun) {
-         AllGuns.Add(gun);
+      public void OptInGun(Gun gun) {
+         var info=this.GetModel<IGunModel>().GetGunInfoByName(gun.Name.Value);
+
+         AllGunwithDatas.Add(gun, new GunData() {
+            BulletCount=new BindableProperty<int>() {
+               //Value=info.BulletMaxCount
+               Value=99999
+            },
+            SpareRoundsCount=new BindableProperty<int>() {
+               Value=9999
+            }
+         });
+
+         SwitchGun(0);
       }
 
       /// <summary>
@@ -55,9 +66,9 @@ namespace GDUGame {
       /// </summary>
       /// <param name="slotNum"></param>
       public void SwitchGun(int slotNum) {
-         if(AllGuns.Count > 0) {
-            CurrentGun = AllGuns[slotNum];
-            CurrentGunData = CurrentGun.GunData;
+         if(AllGunwithDatas.Count > 0) {
+            CurrentGun = AllGunwithDatas.ElementAt(0).Key;
+            CurrentGunData = AllGunwithDatas.ElementAt(0).Value;
          }
       }
 
@@ -65,7 +76,7 @@ namespace GDUGame {
          //To be changed when start from level
          //Implement by Model System, loadPathString and fileName should be read by json file
 
-         if(mAllGuns != null) {
+         if(AllGunwithDatas != null) {
             SwitchGun(0);
          }
       }

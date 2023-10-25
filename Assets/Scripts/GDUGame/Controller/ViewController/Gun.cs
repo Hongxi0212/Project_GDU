@@ -1,5 +1,5 @@
 ﻿using QPFramework;
-using System.Numerics;
+using UnityEngine;
 
 namespace GDUGame {
    /// <summary>
@@ -22,41 +22,35 @@ namespace GDUGame {
 
       private int capacity;
 
-      public GunData GunData;
+      private GunData gunData;
 
       public BindableProperty<string> Name;
 
       public BindableProperty<GunState> State;
 
       private void Awake() {
-         bullet = transform.Find("Bullet").GetComponent<Bullet>();
-
-         Name.Value = name.Split('(')[0];
-
-         //不对，Controller不应该直接获得Model
-         var info= this.GetModel<IGunModel>().GetGunInfoByName(Name.Value);
-
-         GunData = new GunData() {
-            BulletCount = new BindableProperty<int>() {
-               Value = info.BulletMaxCount
-            },
-            SpareRoundsCount = new BindableProperty<int>() {
-               Value = 9999
-            }
+         Name = new BindableProperty<string>() {
+            Value = name.Split('(')[0]
          };
 
          State = new BindableProperty<GunState>() {
             Value = GunState.Idle,
          };
 
-         this.GetSystem<IGunSystem>().RegisterGun(this);
+         bullet = transform.Find("Bullet").GetComponent<Bullet>();
+
+         var gunSystem = this.GetSystem<IGunSystem>();
+
+         gunSystem.OptInGun(this);
+         gunData = gunSystem.CurrentGunData;
+
       }
 
       /// <summary>
       /// Gun Shoot, implement by Inst Bullet Instance GameObject
       /// </summary>
       public void Shoot() {
-         if(GunData.BulletCount.Value > 0 && State.Value == GunState.Idle) {
+         if(gunData.BulletCount.Value > 0 && State.Value == GunState.Idle) {
             //State Changing should be instead of using TimeSystem with Fire Frequency
             State.Value = GunState.Shooting;
             var b = Instantiate(bullet, bullet.transform.position, bullet.transform.rotation);
@@ -71,9 +65,9 @@ namespace GDUGame {
       /// Gun Reload, Checking bullet count in gun and spare rounds count
       /// </summary>
       public void Reload() {
-         if(GunData.BulletCount.Value < capacity && State.Value == GunState.Idle) {
-            if(GunData.SpareRoundsCount.Value > 0) {
-               var needBulletCount = capacity - GunData.BulletCount.Value;
+         if(gunData.BulletCount.Value < capacity && State.Value == GunState.Idle) {
+            if(gunData.SpareRoundsCount.Value > 0) {
+               var needBulletCount = capacity - gunData.BulletCount.Value;
 
                if(needBulletCount > 0) {
                   //Using TimeSystem to implement reload

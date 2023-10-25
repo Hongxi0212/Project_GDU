@@ -16,6 +16,8 @@ namespace QPFramework {
             OnDelayFinish = onDelayFinish,
             State = TaskState.NotStart
          };
+
+         allTasks.AddLast(task);
       }
 
       protected override void OnInit() {

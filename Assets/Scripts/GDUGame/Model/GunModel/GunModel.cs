@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace QPFramework {
    public class GunModel: AbstractModel, IGunModel {
       private Dictionary<string, GunInfo> allGunInfos = new Dictionary<string, GunInfo>() {
-            { "AK-47", new GunInfo("AK-47", "Test Weapon", true, 30, 50f, 0.2f, 100f, 2f) },
+            { "AK-47", new GunInfo("AK-47", "Test Weapon", true, 30, 50f, 10f, 300f, 2f) },
         };
 
       public GunInfo GetGunInfoByName(string name) {

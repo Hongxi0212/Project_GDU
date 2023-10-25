@@ -1,4 +1,5 @@
 ﻿using QPFramework;
+using UnityEngine;
 
 namespace GDUGame {
    /// <summary>
@@ -14,7 +15,7 @@ namespace GDUGame {
          var gunSystem = this.GetSystem<IGunSystem>();
 
          gunSystem.CurrentGun.Shoot();
-         gunSystem.CurrentGun.GunData.BulletCount.Value--;
+         gunSystem.CurrentGunData.BulletCount.Value--;
 
          var gunInfo = this.GetModel<IGunModel>().GetGunInfoByName(gunSystem.CurrentGun.Name.Value);
 
